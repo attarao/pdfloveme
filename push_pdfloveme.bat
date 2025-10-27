@@ -1,39 +1,47 @@
 @echo off
 echo ========================================
-echo  🚀 Pushing PDFLoveMe Website to GitHub
+echo   🚀 Auto Push Script - PDFLoveMe
 echo ========================================
 echo.
 
-:: Step 1: Go to project folder
+:: Go to project directory
 cd /d "%~dp0"
 
-:: Step 2: Initialize git if not done
+:: Initialize git if missing
 if not exist ".git" (
     echo Initializing new Git repository...
     git init
 )
 
-:: Step 3: Configure user info
+:: Set user info
 git config user.name "Attar"
 git config user.email "attarao0302@gmail.com"
 
-:: Step 4: Add all files
+:: Add all files
+echo Adding all files...
 git add --all
 
-:: Step 5: Commit changes
-git commit -m "Auto commit from push script"
+:: Commit changes
+git commit -m "Auto sync commit from local machine" >nul 2>&1
 
-:: Step 6: Create main branch
+:: Ensure we're on 'main' branch
 git branch -M main
 
-:: Step 7: Add remote if missing
+:: Add remote origin (replace if exists)
 git remote remove origin 2>nul
 git remote add origin https://github.com/attarao/pdfloveme.git
 
-:: Step 8: Push to GitHub
-echo Pushing to GitHub...
+:: Pull before pushing (avoid fetch first error)
+echo Syncing with remote (pulling latest changes)...
+git fetch origin main >nul 2>&1
+git pull --rebase origin main
+
+:: Push changes
+echo Uploading files to GitHub...
 git push -u origin main
 
 echo.
-echo ✅ Done! Check your repo: https://github.com/attarao/pdfloveme
+echo ✅ Upload complete! Check your repo:
+echo 🔗 https://github.com/attarao/pdfloveme
+echo.
 pause
